@@ -5,6 +5,8 @@ import { APP_ORIGIN, NODE_ENV, PORT } from "./constants/env";
 import cookieParser from "cookie-parser";
 import errorHandler from "./middleware/errorHandler";
 import catchErrors from "./utils/catchErrors";
+import { OK } from "./constants/http";
+import authRoutes from "./routes/authRoutes";
 
 const app = express();
 app.use(express.json());
@@ -18,14 +20,18 @@ app.use(
 app.use(cookieParser());
 
 app.get("/", (req, res, next) => {
-  res.status(200).json({
+  res.status(OK).json({
     status: "healthy",
   });
 });
 
+app.use("/auth", authRoutes);
+
+
+
 app.use(errorHandler);
 
-app.listen(8000, async () => {
+app.listen(PORT, async () => {
   console.log(`connected on ${PORT} in ${NODE_ENV}`);
   await connectToDatabase();
 });
